@@ -42,10 +42,17 @@ app.get("/api/tasks/", (req, res) => {
  * Handles post requests where the body contains 
  * a description 
  */
-app.post("/api/tasks/", (req, res) => {
+app.post("/api/tasks/:description?", (req, res) => {
 
-    let newDescription = req.body;
-    // console.log(newDescription);
+    let newDescription; 
+
+    // Determine if the description is coming in
+    // as a parameter (URL), or request body
+    if (req.params.description != null) {
+        newDescription = { "description" : req.params.description}
+    } else {
+        newDescription = req.body;
+    }
 
     // read from the file 
     let currentTasks = JSON.parse(fs.readFileSync("js/tasks.json")); 
@@ -54,27 +61,13 @@ app.post("/api/tasks/", (req, res) => {
 
     fs.writeFile("js/tasks.json", JSON.stringify(currentTasks), err => {
         if (err) throw err; 
-        res.send(currentTasks);
+        res.send(newDescription);
         console.log("Done writing.");
     })
     
 });
 
-app.post("/api/tasks/:description", (req, res) => {
-    let newDescription = { "description" : req.params.description};
-
-    // read from the file 
-    let currentTasks = JSON.parse(fs.readFileSync("js/tasks.json")); 
-
-    currentTasks.push(newDescription); 
-
-    fs.writeFile("js/tasks.json", JSON.stringify(currentTasks), err => {
-        if (err) throw err; 
-        res.send(currentTasks);
-        console.log("Done writing.");
-    })
-    
-})
+app.delete("/api/tasks/")
 
 app.listen(3000, () => {
     console.log("Listening on port 3000.");

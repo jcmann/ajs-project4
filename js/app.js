@@ -24,8 +24,7 @@
 const getTasks = () => {
 
     let xhr = new XMLHttpRequest(); 
-    let studentID = "2988742";
-    let url = `http://localhost:3000/api/tasks`;
+    let url = `http://localhost:3000/api/tasks/`;
 
     xhr.open("get", url); 
 
@@ -70,12 +69,11 @@ const addOrDeleteTask = (event) => {
 
     // General data required 
     let xhr = new XMLHttpRequest(); 
-    let url = "https://ghu8xhzgfe.execute-api.us-east-1.amazonaws.com/tasks";
-    let key = "Itcheui2tB58SlUGe8rrP8mskudGsNDT9nfKKG9S";
-    let studentID = "2988742";
+    let url = `http://localhost:3000/api/tasks/`;
+
+
     let params = {
-        'StudentId' : studentID,
-        'Description' : ""
+        'description' : ""
     }
 
     let method;
@@ -85,7 +83,7 @@ const addOrDeleteTask = (event) => {
     if (event.target.id == "newTask" || event.target.id == "task") {
         method = "post"; 
         description = document.querySelector("#task").value; 
-        params.Description = description; 
+        params.description = description; 
     } else if (event.target.classList.contains("deleteButton")) {
         method = "delete"; 
         description = event.target.getAttribute("data-description");
@@ -95,7 +93,7 @@ const addOrDeleteTask = (event) => {
     // Open the XHR, set headers, and execute. 
     xhr.open(method, url); 
     xhr.setRequestHeader("Content-Type", "application/json"); 
-    xhr.setRequestHeader("x-api-key", key); 
+
 
     xhr.onreadystatechange = () => {
         if (xhr.readyState == 4) {

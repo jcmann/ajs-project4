@@ -30,7 +30,9 @@ app.get("/api/tasks/", (req, res) => {
         } else {
             res.contentType("application/json");
             res.send(data);
+        
             res.end(); 
+
         }
     }); 
 
@@ -56,6 +58,21 @@ app.post("/api/tasks/", (req, res) => {
         console.log("Done writing.");
     })
     
+});
+
+app.post("/api/tasks/:description", (req, res) => {
+    let newDescription = { "description" : req.params.description};
+
+    // read from the file 
+    let currentTasks = JSON.parse(fs.readFileSync("js/tasks.json")); 
+
+    currentTasks.push(newDescription); 
+
+    fs.writeFile("js/tasks.json", JSON.stringify(currentTasks), err => {
+        if (err) throw err; 
+        res.send(currentTasks);
+        console.log("Done writing.");
+    })
     
 })
 

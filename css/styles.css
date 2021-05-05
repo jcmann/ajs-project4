@@ -1,3 +1,52 @@
-h2 {
-    background-color: green;
+:root {
+    --dark-blue: #254E70; 
+    --medium-blue: #37718E; 
+    --light-blue: #8EE3Ef; 
+    --light-teal: #AEF3E7;
+    --brick-red: #C33C54;
+}
+
+ul li {
+    list-style-type: none;
+    padding-bottom: .5em;
+}
+
+header, main {
+    margin: 0 auto;
+    width: 30%; 
+    padding: 1em;
+}
+
+header {
+    background-color: var(--dark-blue);
+    text-align: center;
+}
+
+header button {
+    background-color: var(--brick-red);
+    color: white;
+    padding: 1em;
+    font-weight: bold;
+    letter-spacing: 1px;
+
+    border-radius: 1em;
+    border: 2px solid var(--light-teal); 
+}
+
+header button:hover, 
+header button:focus {
+    border: 2px dashed var(--light-teal)
+}
+
+header input[type="text"] {
+    width: 20em;
+    height: 2em;
+}
+
+main {
+    background-color: var(--light-teal);   
+}
+
+main h2 {
+    text-align: center;
 }

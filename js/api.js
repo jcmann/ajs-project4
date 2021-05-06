@@ -69,9 +69,62 @@ app.post("/api/tasks/:description?", (req, res) => {
     
 });
 
+/**
+ * Handles all delete requests sent to the server. 
+ * The id is optional because these may be sent
+ * via request body or URL parameter.
+ * 
+ * This is what's used in the UI component, 
+ * which feeds in a description via the body.
+ */
 app.delete("/api/tasks/", (req, res) => {
 
+    // read from the file to get current data
+    let currentTaskList = JSON.parse(fs.readFileSync("js/tasks.json")); 
+
+    // get the current description to delete, 
+    // passed in via req 
+    let descToDelete; 
+    if (req.body != null) {
+        descToDelete = req.body; 
+        // console.log(descToDelete);
+        // filter for everything not equal to descToDelete
+        let updatedTaskList = currentTaskList.filter(current => current.description != descToDelete);
+        
+        fs.writeFile("js/tasks.json", JSON.stringify(updatedTaskList), err => {
+            if (err) throw err; 
+            res.send({"description" : descToDelete});
+            console.log("Done writing.");
+        })
+
+    } else {
+        res.send({}); 
+    }
+
 });
+
+app.delete("/api/tasks/:id", (req, res) => {
+
+    // read from the file to get current data
+    let currentTaskList = JSON.parse(fs.readFileSync("js/tasks.json")); 
+
+    let idToDelete; 
+    if (req.params.id != null) {
+        idToDelete = req.params.id; 
+        let updatedTaskList = 
+                currentTaskList.filter(current => current.id != idToDelete);
+        
+            fs.writeFile("js/tasks.json", JSON.stringify(updatedTaskList), err => {
+                if (err) throw err; 
+                res.send({"id" : idToDelete});
+                console.log("Done writing.");
+            })
+
+    } else {
+        res.send({}); 
+    }
+
+})
 
 app.listen(3000, () => {
     console.log("Listening on port 3000.");

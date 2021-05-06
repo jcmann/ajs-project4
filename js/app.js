@@ -87,7 +87,8 @@ const addOrDeleteTask = (event) => {
     } else if (event.target.classList.contains("deleteButton")) {
         method = "delete"; 
         description = event.target.getAttribute("data-description");
-        params.Description = description;
+        params.description = description;
+        console.log(`Sending task to delete: ${description}`);
     }
 
     // Open the XHR, set headers, and execute. 

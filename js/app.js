@@ -48,12 +48,11 @@ const outputTasks = (data) => {
 
     // Extract just the data we need
     let tasks = data; 
-    console.log(tasks);
 
     // Generate each task received in data
     for (current of tasks) {
 
-        buildNewItem(current.description); 
+        buildNewItem(current); // changed
 
     }
 
@@ -78,6 +77,7 @@ const addOrDeleteTask = (event) => {
 
     let method;
     let description; 
+    let id; 
 
     // Determine the method and description, determined differently on post/delete
     if (event.target.id == "newTask" || event.target.id == "task") {
@@ -86,9 +86,9 @@ const addOrDeleteTask = (event) => {
         params.description = description; 
     } else if (event.target.classList.contains("deleteButton")) {
         method = "delete"; 
-        description = event.target.getAttribute("data-description");
-        params.description = description;
-        console.log(`Sending task to delete: ${description}`);
+        id = event.target.getAttribute("data-id"); 
+        url += `${id}`; // delete request uses parameters
+        console.log(`Sending task to delete: ${id}`);
     }
 
     // Open the XHR, set headers, and execute. 
@@ -100,7 +100,7 @@ const addOrDeleteTask = (event) => {
         if (xhr.readyState == 4) {
             // Clear things out to prepare for new refreshed tasks 
             clearInput(); 
-            // removeChildNodes(); 
+            removeChildNodes(); 
             updateList(method, description); 
             // getTasks();
         }
@@ -134,11 +134,11 @@ const removeChildNodes = () => {
  * Used in the updateList method to actually generate a new task when 
  * it's been entered by the user
  */
-const buildNewItem = (description) => {
+const buildNewItem = (data) => {
     let ul = document.querySelector("#taskList");
     // Create the delete button 
     let deleteButton = document.createElement("button"); 
-    deleteButton.setAttribute("data-description", description);
+    deleteButton.setAttribute("data-id", data.id);
     deleteButton.textContent = "X"; 
     deleteButton.addEventListener("click", addOrDeleteTask);
     deleteButton.classList.add("deleteButton");
@@ -146,17 +146,18 @@ const buildNewItem = (description) => {
     // Create the li itself (bullet removed with CSS)
     let item = document.createElement("li");
     item.appendChild(deleteButton); // appending this first for placement 
-    item.append(` ${description}`); // append (not child) because it's text
+    item.setAttribute("data-id", data.id);
+    item.append(` ${data.description}`); // append (not child) because it's text
     ul.appendChild(item); 
 }
 
 /**
  * Visually removes an element from the UI without making a new request to the API. 
  */
-const removeItem = (description) => {
+const removeItem = (id) => {
     let items = [...document.querySelectorAll("button")]; 
     
-    let itemToRemove = items.find(current => current.getAttribute("data-description") == description); 
+    let itemToRemove = items.find(current => current.getAttribute("data-id") == id); 
     itemToRemove.parentNode.remove(); 
 }
  
